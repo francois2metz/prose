@@ -270,8 +270,12 @@ module.exports = Backbone.View.extend({
   },
 
   compilePreview: function(content) {
+    return _.escape(this._replaceImagesUrl(content));
+  },
+
+  _replaceImagesUrl: function(content) {
     // Scan the content search for ![]()
-    // grab the path and file and form a RAW github aboslute request for it
+    // grab the path and file and form a RAW github absolute request for it
     var scan = /\!\[([^\[]*)\]\(([^\)]+)\)/g;
     var image = /\!\[([^\[]*)\]\(([^\)]+)\)/;
     var titleAttribute = /".*?"/;
@@ -295,10 +299,12 @@ module.exports = Backbone.View.extend({
 
           // Remove {{site.baseurl}}
           path = path.replace('{{site.baseurl}}/', '/');
+          var basePath = this.config && this.config.media ? this.config.media
+              : util.extractFilename(this.model.get('path'))[0];
 
           // Prepend directory path if not site root relative
           path = /^\//.test(path) ? path.slice(1) :
-            util.extractFilename(this.model.get('path'))[0] + '/' + path;
+            basePath + '/' + path;
 
           var url = auth.site + '/' + this.repo.get('owner').login + '/' + this.repo.get('name') + '/blob/' +  this.branch + '/' + window.escape(path) + '?raw=true';
 
@@ -307,7 +313,7 @@ module.exports = Backbone.View.extend({
       }
     }).bind(this));
 
-    return _.escape(content);
+    return content;
   },
 
   toggleEditor: function() {

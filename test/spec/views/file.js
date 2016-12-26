@@ -154,6 +154,25 @@ describe('File view', function() {
       var content = "<script>alert('pwned')</script>";
       expect(fileView.compilePreview(content)).to.equal('&lt;script&gt;alert(&#x27;pwned&#x27;)&lt;&#x2F;script&gt;');
     });
+
+    it('replace image url with relative links and a media dir', function() {
+      fileView.model.set({path: 'test/test'})
+      fileView.config = { "media": "/configured/assets" };
+      var content = "![](blog/test.jpg)";
+      expect(fileView._replaceImagesUrl(content)).to.equal('![](https://github.com/login-name/repo-name/blob/master//configured/assets/blog/test.jpg?raw=true)');
+    });
+
+    it('replace image url with relative links', function() {
+      fileView.model.set({path: 'test/test'})
+      var content = "![](blog/test.jpg)";
+      expect(fileView._replaceImagesUrl(content)).to.equal('![](https://github.com/login-name/repo-name/blob/master/test/blog/test.jpg?raw=true)');
+    });
+
+    it('dont replace image url with absolute links', function() {
+      fileView.model.set({path: 'test/test'})
+      var content = "![](/blog/test.jpg)";
+      expect(fileView._replaceImagesUrl(content)).to.equal('![](https://github.com/login-name/repo-name/blob/master/blog/test.jpg?raw=true)');
+    });
   });
 
   describe('session storage', function () {
