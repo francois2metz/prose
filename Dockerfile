@@ -10,4 +10,4 @@ COPY . /code
 RUN yarn run build
 
 EXPOSE 3000
-CMD [ "yarn run serve -D -C --compress -f img/favicon.ico" ]
+CMD [ "./node_modules/.bin/serve", "-D", "-C", "--compress", "-f", "img/favicon.ico" ]
