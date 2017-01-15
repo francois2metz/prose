@@ -1,0 +1,6 @@
+{
+  "api": "https://api.github.com",
+  "site": "https://github.com",
+  "clientId": "72e2a2d3340194029135",
+  "gatekeeperUrl": "https://gatekeeper.stormzapp.com"
+}
